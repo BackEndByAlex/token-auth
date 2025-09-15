@@ -1,7 +1,6 @@
 import { decode, encode } from '../src/Base64Url.js'
 import { nowSeconds } from '../src/Clock.js'
-import * as keyManager from '../src/KeyManager.js'
-import TokenService from '../src/TokenService.js'
+import { rotateIfNeeded, getCurrentKeyId } from '../src/KeyManager.js'
 
 console.log('===')
 console.log(encode('Hello= World!'))
@@ -11,8 +10,8 @@ console.log('===')
 console.log(nowSeconds())
 
 console.log('===')
-console.log(keyManager.getCurrentKeyId())
+console.log(getCurrentKeyId())
 
 console.log('===')
-keyManager.rotateIfNeeded()
-console.log(keyManager.getCurrentKeyId())
+rotateIfNeeded()
+console.log(getCurrentKeyId())

@@ -2,18 +2,17 @@
   * Service for creating and verifying JWT tokens.
   * (c) 2025, MIT license
   * @author Alexandru C.A
-  * @description TokenService is responsible for managing JWT tokens, 
+  * @description TokenService is responsible for managing JWT tokens,
   * including creation, verification, and revocation.
 */
 
-import * as keyManager from './KeyManager.js'
+import { rotateIfNeeded, getCurrentKeyId } from '../src/KeyManager.js'
 import { revocationStore } from './RevocationStore.js'
 import { nowSeconds } from './Clock.js'
 import { encode, decode } from './Base64Url.js'
 
 class TokenService {
   constructor() {
-    this.keyManager = keyManager
     this.revocationStore = revocationStore
     this.nowSeconds = nowSeconds
   }
@@ -24,8 +23,8 @@ class TokenService {
     * Returns a string representation of the jti.
   */
   issueToken(payload, ttlSeconds) {
-    this.keyManager.rotateIfNeeded()
-    const header = { alg: 'RS256', typ: 'JWT', kid: this.keyManager.getCurrentKeyId() }
+    rotateIfNeeded()
+    const header = { alg: 'RS256', typ: 'JWT', kid: getCurrentKeyId() }
     const iat = this.nowSeconds.nowSeconds()
     const exp = iat + ttlSeconds
 
