@@ -6,16 +6,16 @@
   * including creation, verification, and revocation.
 */
 
-import { keyManager } from './KeyManager.js'
+import * as keyManager from './KeyManager.js'
 import { revocationStore } from './RevocationStore.js'
-import { clock } from './Clock.js'
+import { nowSeconds } from './Clock.js'
 import { encode, decode } from './Base64Url.js'
 
 class TokenService {
   constructor() {
     this.keyManager = keyManager
     this.revocationStore = revocationStore
-    this.clock = clock
+    this.nowSeconds = nowSeconds
   }
 
   /*
@@ -26,7 +26,7 @@ class TokenService {
   issueToken(payload, ttlSeconds) {
     this.keyManager.rotateIfNeeded()
     const header = { alg: 'RS256', typ: 'JWT', kid: this.keyManager.getCurrentKeyId() }
-    const iat = this.clock.nowSeconds()
+    const iat = this.nowSeconds.nowSeconds()
     const exp = iat + ttlSeconds
 
     const fullPayload = {

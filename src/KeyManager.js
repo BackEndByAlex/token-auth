@@ -8,7 +8,7 @@ let keyRotationTime = null
 */
 export function rotateIfNeeded() {
   const now = Date.now()
-  if (!keyRotationTime || now >= keyRotationTime > 24 * 60 * 60 * 1000) { // Rotate every 24 hours
+  if (!keyRotationTime || now >= keyRotationTime - 24 * 60 * 60 * 1000) { // Rotate every 24 hours
     generateNewKey()
   }
 }
