@@ -1,3 +1,9 @@
-export function nowSeconds() {
-  return Math.floor(Date.now() / 1000)
+export class Clock {
+  constructor() {
+    this.nowSeconds = this.#nowSeconds()
+  }
+
+  #nowSeconds() {
+    return Math.floor(Date.now() / 1000)
+  }
 }
