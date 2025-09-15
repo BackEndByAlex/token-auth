@@ -16,8 +16,8 @@ class TokenService {
     this.keyManager = keyManager
     this.revocationStore = revocationStore
     this.clock = clock
-    this.base64Url = base64Url
   }
+
   /*
     * Generates a unique token identifier (jti).
     * This is done using random values.
@@ -33,7 +33,7 @@ class TokenService {
       ...payload,
       iat,
       exp,
-      jti: this.generateJti() // Unique token ID for revocation
+      jti: this.#generateJti() // Unique token ID for revocation
     }
 
     // Create JWT structure
@@ -56,9 +56,10 @@ class TokenService {
   rotateKey() {
   }
 
+  /*
+  * Generates a unique token identifier (jti).
+  */
   #generateJti() {
-    
+    return Date.now().toString() + Math.random().toString(36).substring(2, 9)
   }
 }
-
-

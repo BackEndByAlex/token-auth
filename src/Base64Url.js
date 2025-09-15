@@ -3,7 +3,6 @@
   * It then replaces '+' with '-', '/' with '_', and removes any trailing '=' characters to convert from base64 to base64url.
   * Finally, it returns the modified string.
 */
-
 export function encode(input) {
   const base64 = btoa(input)
   const base64Url = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
