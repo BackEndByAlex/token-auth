@@ -37,7 +37,7 @@ export function issueToken (payload, ttlSeconds) {
     ...payload,
     iat,
     exp,
-    jti: jtiGenerator.generateJti() // Unique token ID for revocation
+    jti: jtiGenerator.generate() // Unique token ID for revocation
   }
 
   // Create JWT structure
