@@ -1,3 +1,3 @@
 export class RevocationStore {
-  constructor() {}
+  // TO-DO
 }

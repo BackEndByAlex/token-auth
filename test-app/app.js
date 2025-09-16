@@ -21,7 +21,17 @@ console.log('===')
 keyManager.rotateIfNeeded()
 console.log(keyManager.getCurrentKeyId())
 
+function runTest() {
+  console.log('===')
+  const payload = { userId: 123, role: 'user' }
+  const token = issueToken(payload, 3600)
+  console.log('Generated token:', token)
+}
+
+runTest()
 console.log('===')
-const payload = { userId: 123, role: 'user' }
-const token = issueToken(payload, 3600) // 1 timme
-console.log('Generated token:', token)
+const data = 'test-data'
+console.log('Sign:', keyManager.sign(data))
+console.log('Verify:', keyManager.verify(data, keyManager.sign(data), keyManager.getCurrentKeyId()))
+console.log('Verify (wrong):', keyManager.verify(data, 'invalid-signature', keyManager.getCurrentKeyId()))
+console.log('Verify (wrong kid):', keyManager.verify(data, keyManager.sign(data), 'wrong-kid'))

@@ -1,5 +1,6 @@
 /*
-* Generates a unique token identifier (jti).
+  * Generates a unique token identifier (jti).
+  * Jti = JSON Token Identifier
 */
 export class JtiGenerator {
   generate() {
