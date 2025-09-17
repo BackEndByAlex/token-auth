@@ -48,7 +48,13 @@ export function issueToken (payload, ttlSeconds) {
   return `${headerEncoded}.${payloadEncoded}.${signature}`
 }
 
-export function verifyToken(token) {
+/**
+ * Verifies a JWT token, checks its signature and revocation status.
+ *
+ * @param {string} token - The JWT token to verify.
+ * @returns {object} An object with 'valid' boolean and either 'payload' or 'error'.
+ */
+export function verifyToken (token) {
   const parts = token.split('.')
   if (parts.length !== 3) {
     return { valid: false, error: 'Invalid format' }
@@ -68,7 +74,14 @@ export function verifyToken(token) {
   return { valid: isValid, payload }
 }
 
-export function decodeToken(token) {
+/**
+ * Decodes a JWT token and returns its payload.
+ *
+ * @param {string} token - The JWT token to decode.
+ * @returns {object} The decoded payload.
+ * @throws {Error} If the token format is invalid.
+ */
+export function decodeToken (token) {
   const parts = token.split('.')
   if (parts.length !== 3) {
     throw new Error('Invalid token format')
@@ -79,11 +92,21 @@ export function decodeToken(token) {
   return payload
 }
 
-export function revokeToken(jti, reason) {
+/**
+ * Revokes a token by its jti (JWT ID).
+ *
+ * @param {string} jti - The unique identifier of the token to revoke.
+ * @param {string} reason - The reason for revocation.
+ * @returns {boolean} True if the token was revoked.
+ */
+export function revokeToken (jti, reason) {
   revocation.revokeToken(jti, reason)
   return true
 }
 
-export function rotateKey() {
+/**
+ * Rotates the signing key if needed.
+ */
+export function rotateKey () {
   keyManager.rotateIfNeeded()
 }

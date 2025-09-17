@@ -1,9 +1,15 @@
+/**
+ * Utility class for encoding and decoding base64url strings.
+ */
 export class Base64Url {
-  /*
-  * The function encodes the input string to base64 using btoa.
-  * It then replaces '+' with '-', '/' with '_', and removes any trailing '=' characters to convert from base64 to base64url.
-  * Finally, it returns the modified string.
-*/
+  /**
+   * The function encodes the input string to base64 using btoa.
+   * It then replaces '+' with '-', '/' with '_', and removes any trailing '=' characters to convert from base64 to base64url.
+   * Finally, it returns the modified string.
+   *
+   * @param {string} input - The input string to encode.
+   * @returns {string} The base64url-encoded string.
+   */
   encode (input) {
     try {
       const base64 = btoa(input)
@@ -14,16 +20,16 @@ export class Base64Url {
     }
   }
 
-  /*
-    * The function decodes a base64url-encoded string back to its original form.
-    * It first replaces '-' with '+' and '_' with '/' to convert from base64url to base64.
-    * Then, it adds padding characters ('=') if necessary to make the length of the string a multiple of 4.
-    * Finally, it decodes the modified string using atob and returns the result.
-  */
-
+  /**
+   * Decodes a base64url-encoded string back to its original string.
+   *
+   * @param {string} input - The base64url-encoded string to decode.
+   * @returns {string} The decoded string.
+   * @throws {Error} If the input is invalid or decoding fails.
+   */
   decode (input) {
     try {
-      // Validera input först
+      // Validate input first
       if (!input || typeof input !== 'string') {
         throw new Error('Input must be a non-empty string')
       }
