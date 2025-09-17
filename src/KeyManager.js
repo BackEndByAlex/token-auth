@@ -20,7 +20,7 @@ export class KeyManager {
     * Returns the current key ID.
     * If no key exists, it generates a new one.
   */
-  getCurrentKeyId() {
+  getCurrentKeyId () {
     if (!this.currentKeyId) {
       this.#generateNewKey()
     }

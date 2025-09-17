@@ -6,7 +6,7 @@
   * including creation, verification, and revocation.
 */
 
-// import { RevocationStore } from './RevocationStore.js'
+import { RevocationStore } from './RevocationStore.js'
 import { Base64Url } from './Base64Url.js'
 import { Clock } from './Clock.js'
 import { JtiGenerator } from './generateJti.js'
@@ -16,7 +16,7 @@ const base64Url = new Base64Url()
 const clock = new Clock()
 const keyManager = new KeyManager()
 const jtiGenerator = new JtiGenerator()
-// const revocation = new RevocationStore()
+const revocation = new RevocationStore()
 
 /**
  * Generates a unique token identifier (jti).
@@ -57,20 +57,32 @@ export function verifyToken(token) {
   const [headerEncoded, payloadEncoded, signature] = parts
   const payload = JSON.parse(base64Url.decode(payloadEncoded))
 
+  if (revocation.isRevoked(payload.jti)) {
+    return { valid: false, error: 'Token revoked' }
+  }
+
   const dataVerify = `${headerEncoded}.${payloadEncoded}`
-  const isValid = keyManager.verify(dataVerify, signature)
+  const isValid = keyManager.verify(dataVerify, signature, payload.kid)
 
   return { valid: isValid, payload }
 }
 
 export function decodeToken(token) {
-  // TO-DO
+  const parts = token.split('.')
+  if (parts.length !== 3) {
+    throw new Error('Invalid token format')
+  }
+
+  const payloadEncoded = parts[1]
+  const payload = JSON.parse(base64Url.decode(payloadEncoded))
+  return payload
 }
 
 export function revokeToken(jti, reason) {
-  // TO-DO
+  revocation.revokeToken(jti, reason)
+  return true
 }
 
 export function rotateKey() {
-  // TO-DO
+  keyManager.rotateIfNeeded()
 }
