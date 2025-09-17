@@ -62,7 +62,8 @@ export function verifyToken(token) {
   }
 
   const dataVerify = `${headerEncoded}.${payloadEncoded}`
-  const isValid = keyManager.verify(dataVerify, signature, payload.kid)
+  const header = JSON.parse(base64Url.decode(headerEncoded))
+  const isValid = keyManager.verify(dataVerify, signature, header.kid)
 
   return { valid: isValid, payload }
 }

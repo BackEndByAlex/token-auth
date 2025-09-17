@@ -5,9 +5,13 @@ export class Base64Url {
   * Finally, it returns the modified string.
 */
   encode (input) {
-    const base64 = btoa(input)
-    const base64Url = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-    return base64Url
+    try {
+      const base64 = btoa(input)
+      const base64Url = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+      return base64Url
+    } catch (error) {
+      throw new Error('Failed to encode to Base64Url')
+    }
   }
 
   /*
@@ -18,8 +22,23 @@ export class Base64Url {
   */
 
   decode (input) {
-    const decode = input.replace(/-/g, '+').replace(/_/g, '/')
-    const padding = decode.length % 4 === 0 ? '' : '='.repeat(4 - (decode.length % 4))
-    return atob(decode + padding)
+    try {
+      // Validera input först
+      if (!input || typeof input !== 'string') {
+        throw new Error('Input must be a non-empty string')
+      }
+
+      if (!/^[A-Za-z0-9_-]*$/.test(input)) {
+        throw new Error('Invalid base64url characters')
+      }
+      const decode = input.replace(/-/g, '+').replace(/_/g, '/')
+      const padding = decode.length % 4 === 0 ? '' : '='.repeat(4 - (decode.length % 4))
+      return atob(decode + padding)
+    } catch (error) {
+      if (error.message.includes('base64url') || error.message.includes('Input must')) {
+        throw error
+      }
+      throw new Error('Failed to decode Base64Url')
+    }
   }
 }
