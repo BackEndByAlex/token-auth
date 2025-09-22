@@ -10,11 +10,11 @@ import { RevocationStore } from './RevocationStore.js'
 import { Base64Url } from './Base64Url.js'
 import { Clock } from './Clock.js'
 import { JtiGenerator } from './generateJti.js'
-import { KeyManager } from './KeyManager.js'
+import { SignatureManager } from './SignatureManager.js'
 
 const base64Url = new Base64Url()
 const clock = new Clock()
-const keyManager = new KeyManager()
+const signatureManager = new SignatureManager()
 const jtiGenerator = new JtiGenerator()
 const revocation = new RevocationStore()
 
@@ -28,8 +28,8 @@ const revocation = new RevocationStore()
  * @returns {string} The signed JWT token.
  */
 export function issueToken (payload, ttlSeconds) {
-  keyManager.rotateIfNeeded()
-  const header = { alg: 'RS256', typ: 'JWT', kid: keyManager.getCurrentKeyId() }
+  signatureManager.rotateIfNeeded()
+  const header = { alg: 'RS256', typ: 'JWT', kid: signatureManager.getCurrentKeyId() }
   const iat = clock.nowSeconds()
   const exp = iat + ttlSeconds
 
@@ -43,7 +43,7 @@ export function issueToken (payload, ttlSeconds) {
   // Create JWT structure
   const headerEncoded = base64Url.encode(JSON.stringify(header))
   const payloadEncoded = base64Url.encode(JSON.stringify(fullPayload))
-  const signature = keyManager.sign(`${headerEncoded}.${payloadEncoded}`)
+  const signature = signatureManager.sign(`${headerEncoded}.${payloadEncoded}`)
 
   return `${headerEncoded}.${payloadEncoded}.${signature}`
 }
@@ -69,7 +69,7 @@ export function verifyToken (token) {
 
   const dataVerify = `${headerEncoded}.${payloadEncoded}`
   const header = JSON.parse(base64Url.decode(headerEncoded))
-  const isValid = keyManager.verify(dataVerify, signature, header.kid)
+  const isValid = signatureManager.verify(dataVerify, signature, header.kid)
 
   return { valid: isValid, payload }
 }
@@ -108,5 +108,5 @@ export function revokeToken (jti, reason) {
  * Rotates the signing key if needed.
  */
 export function rotateKey () {
-  keyManager.rotateIfNeeded()
+  signatureManager.rotateIfNeeded()
 }

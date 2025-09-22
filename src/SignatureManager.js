@@ -1,25 +1,14 @@
 /**
  * Manages cryptographic keys, handles key rotation, signing, and verification.
  */
-export class KeyManager {
+export class SignatureManager {
   /**
-   * Initializes a new instance of the KeyManager class.
+   * Initializes a new instance of the SignatureManager class.
    */
   constructor () {
     this.currentKeyId = null
     this.privateKey = null
     this.keyRotationTime = null
-  }
-
-  /**
-   * Checks if the current key needs to be rotated based on the rotation time.
-   * If the key is older than 24 hours, it generates a new key.
-   */
-  rotateIfNeeded () {
-    const now = Date.now()
-    if (!this.keyRotationTime || now - this.keyRotationTime > 24 * 60 * 60 * 1000) { // Rotate every 24 hours
-      this.#generateNewKey()
-    }
   }
 
   /**
@@ -60,6 +49,17 @@ export class KeyManager {
   #generateNewKey () {
     this.currentKeyId = Date.now().toString()
     this.keyRotationTime = Date.now()
+  }
+
+  /**
+   * Checks if the current key needs to be rotated based on the rotation time.
+   * If the key is older than 24 hours, it generates a new key.
+   */
+  rotateIfNeeded () {
+    const now = Date.now()
+    if (!this.keyRotationTime || now - this.keyRotationTime > 24 * 60 * 60 * 1000) { // Rotate every 24 hours
+      this.#generateNewKey()
+    }
   }
 
   /**
