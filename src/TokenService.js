@@ -28,24 +28,34 @@ const revocation = new RevocationStore()
  * @returns {string} The signed JWT token.
  */
 export function issueToken (payload, ttlSeconds) {
-  signatureManager.rotateIfNeeded()
-  const header = { alg: 'RS256', typ: 'JWT', kid: signatureManager.getCurrentKeyId() }
-  const iat = clock.nowSeconds()
-  const exp = iat + ttlSeconds
+  const jwtPayload = createJwtPayload(payload, ttlSeconds)
+  const jwtParts = createJwtParts(jwtPayload)
+  return signJwt(jwtParts)
+}
 
-  const fullPayload = {
+function createJwtPayload (payload, ttlSeconds) {
+  const iat = clock.nowSeconds()
+  return {
     ...payload,
     iat,
-    exp,
+    exp: iat + ttlSeconds,
     jti: jtiGenerator.generate() // Unique token ID for revocation
   }
+}
 
-  // Create JWT structure
-  const headerEncoded = base64Url.encode(JSON.stringify(header))
-  const payloadEncoded = base64Url.encode(JSON.stringify(fullPayload))
-  const signature = signatureManager.sign(`${headerEncoded}.${payloadEncoded}`)
+function createJwtParts (payload) {
+  signatureManager.rotateIfNeeded()
+  const header = { alg: 'RS256', typ: 'JWT', kid: signatureManager.getCurrentKeyId() }
 
-  return `${headerEncoded}.${payloadEncoded}.${signature}`
+  return {
+    header: base64Url.encode(JSON.stringify(header)),
+    payload: base64Url.encode(JSON.stringify(payload))
+  }
+}
+
+function signJwt ({ header, payload }) {
+  const signature = signatureManager.sign(`${header}.${payload}`)
+  return `${header}.${payload}.${signature}`
 }
 
 /**

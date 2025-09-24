@@ -12,8 +12,5 @@ The module is tested through an automated test application in test-app/app.js an
 | Token verification (verifyToken) | Verified valid token            |    PASS     |       |
 | Token decoding (decodeToken)     | Extracted payload from token    |    PASS     |       |
 | Token revocation (revokeToken)   | Revoked token and verified      |    PASS     |       |
-| Key rotation (rotateToken)       | Rotated key, old token invalid  |    PASS     | force rotate key it's working, 24h rotate key I not test |
+| Key rotation (rotateToken)       | Rotated key, old token invalid  |    PASS     | force rotate key it's working, 24h rotate key I did not test |
 | Invalid token handling           | Tested with malformed token     |    PASS     |
-
-## Summary
-All tests passed successfully. The module handles token creation, verification, decoding, revocation, and key rotation correctly.

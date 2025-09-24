@@ -10,6 +10,11 @@
 |         verifyToken                         |        Funktion som kontrollerar om en JWT-token är giltig genom signaturverifiering och revocation-kontroll.                         |      **Use Searchable Names:** "verify" är ett sökbart och erkänt verb inom säkerhetsdomänen. **Avoid Mental Mapping:** Namnet kräver ingen översättning - utvecklare förstår direkt att funktionen verifierar något. Use Problem Domain Names: "Verify" är standard terminologi inom kryptografi och autentisering.                                 |                          
 |    generate                    |       Metod som skapar en unik JWT-identifierare genom att kombinera timestamp och slumpmässiga tecken.                          |       **Use Intention-Revealing Names:** Namnet "generate" avslöjar tydligt att metoden skapar något nytt. **Avoid Mental Mapping:** Utvecklare behöver inte gissa vad "gen", "mk" eller liknande förkortningar betyder. **Pick One Word per Concept:** Konsekvent användning av "generate" för alla skapande-operationer i systemet, istället för att blanda "create", "make", "build" etc.                                |                                          
 
+
+### Namngivning Reflection
+
+  
+
 ## Funktioner (kapitel 3)
 
 | Metodnamn                        |      Länk eller kod             | Antal rader (ej ws) |     Reflektion          |
@@ -20,3 +25,9 @@
 |        ecode                          |     [ecode](./src/base64Url.js) lines 13-21                            |       9              | **Small:** Med 9 rader följer funktionen 'functions should be small' principen. **Do One Thing:** Gör exakt en sak - konverterar string till base64url format. **Function Arguments:** Monadic (ett argument) vilket är idealt enligt Clean Code. **Use Descriptive Names:** Namnet beskriver tydligt vad funktionen gör.                |
 |           sign                       |         [sign](./src/SignatureManager.js) lines 34-44                        |        9             |         **Small:** Med 9 rader ligger är den acceptabel. **Do One Thing:** Gör en sak - skapar signatur baserat på data och hemlig nyckel. **Function Arguments:** Monadic (ett argument) vilket är idealt enligt Clean Code.                |
 
+### Funktioner reflection
+
+
+#### Refactoring
+
+## Huvud reflections

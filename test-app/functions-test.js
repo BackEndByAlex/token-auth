@@ -1,7 +1,7 @@
 // test-app/complete-test.js
 import { Base64Url } from '../src/Base64Url.js'
 import { Clock } from '../src/Clock.js'
-import { KeyManager } from '../src/KeyManager.js'
+import { SignatureManager } from '../src/SignatureManager.js'
 
 console.log('='.repeat(50))
 
@@ -24,7 +24,7 @@ console.log(`Clock: ${timestamp > 0 ? 'PASS' : 'FAIL'}`)
 
 // Test 3: KeyManager Functions
 console.log('\nTest 3: KeyManager Functions')
-const keyManager = new KeyManager()
+const keyManager = new SignatureManager()
 const keyId1 = keyManager.getCurrentKeyId()
 keyManager.rotateIfNeeded()
 const keyId2 = keyManager.getCurrentKeyId()
