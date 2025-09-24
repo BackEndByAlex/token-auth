@@ -7,7 +7,7 @@ export class Clock {
    *
    * @returns {number} The current time in seconds.
    */
-  nowSeconds () {
+  getTimeInSeconds () {
     return Math.floor(Date.now() / 1000)
   }
 }

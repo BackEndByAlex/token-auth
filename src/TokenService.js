@@ -79,26 +79,6 @@ function signJwt ({ header, payload }) {
   return `${header}.${payload}.${signature}`
 }
 
-// export function verifyToken (token) {
-//   const parts = token.split('.')
-//   if (parts.length !== 3) {
-//     return { valid: false, error: 'Invalid format' }
-//   }
-
-//   const [headerEncoded, payloadEncoded, signature] = parts
-//   const payload = JSON.parse(base64Url.decode(payloadEncoded))
-
-//   if (revocation.isRevoked(payload.jti)) {
-//     return { valid: false, error: 'Token revoked' }
-//   }
-
-//   const dataVerify = `${headerEncoded}.${payloadEncoded}`
-//   const header = JSON.parse(base64Url.decode(headerEncoded))
-//   const isValid = signatureManager.verify(dataVerify, signature, header.kid)
-
-//   return { valid: isValid, payload }
-// }
-
 /**
  * Verifies a JWT token, checking its signature and revocation status.
  *
@@ -125,7 +105,7 @@ export function verifyToken (token) {
 function parseTokenParts (token) {
   const parts = token.split('.')
   if (parts.length !== 3) {
-    throw new Error('Invalid format')
+    throw new Error('Invalid token format')
   }
   return parts
 }
@@ -158,7 +138,7 @@ function decodeTokenParts (parts) {
  * @returns {object} An object with 'valid' boolean and either 'payload' or 'error'.
  */
 function validateTokenParts (parts, { header, payload, headerEncoded, payloadEncoded }) {
-  if (revocation.isRevoked(payload.jti)) {
+  if (revocation.checkIfRevoked(payload.jti)) {
     return { valid: false, error: 'Token revoked' }
   }
 

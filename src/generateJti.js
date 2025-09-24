@@ -8,7 +8,7 @@ export class JtiGenerator {
    *
    * @returns {string} The generated jti string.
    */
-  generate () {
+  generateJti () {
     return Date.now().toString() + Math.random().toString(36).substring(2, 9)
   }
 }

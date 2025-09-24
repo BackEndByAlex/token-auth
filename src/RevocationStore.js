@@ -26,7 +26,7 @@ export class RevocationStore {
    * @param {string} jti - The unique identifier of the token to check.
    * @returns {boolean} True if the token is revoked, false otherwise.
    */
-  isRevoked (jti) {
+  checkIfRevoked (jti) {
     return this.revokedTokens.has(jti)
   }
 }
