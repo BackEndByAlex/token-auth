@@ -13,6 +13,12 @@ A lightweight, dependency-free JavaScript module for issuing, verifying, and rev
 
 ## Installation
 
+### From npm
+
+```bash
+npm i token-auth-edu
+```
+
 ### From GitHub
 ```bash
 git clone https://github.com/your-username/token-auth.git
