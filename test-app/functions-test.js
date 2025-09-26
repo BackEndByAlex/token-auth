@@ -18,7 +18,7 @@ console.log(`Base64Url: ${decoded === testString ? 'PASS' : 'FAIL'}`)
 // Test 2: Clock Functions
 console.log('\nTest 2: Clock Functions')
 const clock = new Clock()
-const timestamp = clock.nowSeconds()
+const timestamp = clock.getTimeInSeconds()
 console.log(`Current timestamp: ${timestamp}`)
 console.log(`Clock: ${timestamp > 0 ? 'PASS' : 'FAIL'}`)
 

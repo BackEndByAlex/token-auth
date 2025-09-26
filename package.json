@@ -1,9 +1,25 @@
 {
   "name": "token-auth",
   "version": "1.0.0",
-  "description": "A simple, dependency-free module for issuing, verifying, and revoking authentication tokens. Designed for educational use, the module will provides basic token-based authentication with support for key rotation, expiration handling, and revocation lists.",
-  "main": "./TokenService.js",
+  "description": "Educational JWT-style token authentication module",
+  "main": "src/TokenService.js",
   "type": "module",
+  "scripts": {
+    "test": "node test-app/app-test.js",
+    "functions-test": "node test-app/functions-test.js"
+  },
+  "keywords": ["jwt", "authentication", "tokens", "education", "javascript"],
   "author": "Alexandru C.A",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BackEndByAlex/token-auth"
+  },
+  "homepage": "https://github.com/BackEndByAlex/token-auth#readme",
+  "bugs": {
+    "url": "https://github.com/BackEndByAlex/token-auth/issues"
+  },
+  "files": [
+    "src/"
+  ]
 }

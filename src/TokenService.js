@@ -41,12 +41,12 @@ export function issueToken (payload, ttlSeconds) {
  * @returns {object} The JWT payload object.
  */
 function createJwtPayload (payload, ttlSeconds) {
-  const iat = clock.nowSeconds()
+  const iat = clock.getTimeInSeconds()
   return {
     ...payload,
     iat,
     exp: iat + ttlSeconds,
-    jti: jtiGenerator.generate() // Unique token ID for revocation
+    jti: jtiGenerator.generateJti() // Unique token ID for revocation
   }
 }
 

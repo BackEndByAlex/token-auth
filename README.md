@@ -248,6 +248,13 @@ node test-app/app-test.js
 node test-app/functions-test.js
 ```
 
+OR 
+
+```bash
+npm test
+npm run functions-test
+```
+
 ## Contributing
 
 This is an educational project. Feel free to:
