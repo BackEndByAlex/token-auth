@@ -1,5 +1,5 @@
 {
-  "name": "@backendbyalex/token-auth",
+  "name": "token-auth-edu",
   "version": "1.0.0",
   "description": "Educational JWT-style token authentication module",
   "main": "src/TokenService.js",
