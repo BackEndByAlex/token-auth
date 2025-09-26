@@ -79,4 +79,11 @@ export class SignatureManager {
     const expectedSignature = this.sign(data)
     return expectedSignature === signature
   }
+
+  /**
+   * Forces immediate key rotation by generating a new key.
+   */
+  forceKeyRotation () {
+    this.#generateNewKey()
+  }
 }

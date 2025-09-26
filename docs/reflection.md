@@ -11,7 +11,15 @@
 |    generateJti                    |       Metod som skapar en unik JWT-identifierare genom att kombinera timestamp och slumpmässiga tecken.                          |       **Use Intention-Revealing Names:** Namnet "generate" avslöjar tydligt att metoden skapar något nytt. **Avoid Mental Mapping:** Utvecklare behöver inte gissa vad "gen", "mk" eller liknande förkortningar betyder. **Pick One Word per Concept:** Konsekvent användning av "generate" för alla skapande-operationer i systemet, istället för att blanda "create", "make", "build" etc.                                |                                          
 
 
-### Namngivning Reflection
+### Namngivning Reflektion
+
+Kapitel 2 om namngivning har varit en ögonöppnare som visat mig hur mycket jag tidigare missade angående kodkvalitet. Insåg även att dåliga namn skapar förvirring.
+
+Under arbetet med modulen märktes hur mycket tid som faktiskt går åt för att hitta bra namn. Först kändes det onödigt, men snabbt blev det tydligt att vaga eller missvisande namn försvårar  återanvändning av kod.
+
+En stor utmaning var att vara konsekvent. Jag växlade automatiskt mellan "create", "generate" och "make" för samma koncept, vilket skapade onödig förvirring när man skulle komma ihåg vilket ord jag använt.
+
+Det mest överraskande var hur namngivning påverkade min egen förståelse av koden. När man tvingades hitta riktigt beskrivande namn fick jag tänka djupare på vad funktionen faktiskt skulle göra. Ibland insåg man att funktionen gjorde för mycket, bara genom namngivningsprocessen.
 
   
 
@@ -25,8 +33,17 @@
 |        ecoded                          |     [ecoded](./src/base64Url.js) lines 13-21                            |       9              | **Small:** Med 9 rader följer funktionen 'functions should be small' principen. **Do One Thing:** Gör exakt en sak - konverterar string till base64url format. **Function Arguments:** Monadic (ett argument) vilket är idealt enligt Clean Code. **Use Descriptive Names:** Namnet beskriver tydligt vad funktionen gör.                |
 |           sign                       |         [sign](./src/SignatureManager.js) lines 34-44                        |        9             |         **Small:** Med 9 rader ligger är den acceptabel. **Do One Thing:** Gör en sak - skapar signatur baserat på data och hemlig nyckel. **Function Arguments:** Monadic (ett argument) vilket är idealt enligt Clean Code.                |
 
-### Funktioner reflection
+### Funktioner Reflektion (Kapitel 3)
 
+Kapitel 3 om funktioner har varit det svåraste att göra i praktiken. Principen att funktioner ska vara små låter självklar, men när man faktiskt kodar blir det mycket svårare än vad jag trodde.
+
+Jag märkte att mina funktioner växte konstant. Börjar med en enkel idé, sedan behöver man lägga till validering, felhantering, och plötsligt är funktionen 15-20 rader lång. I stunden känns varje rad motiverad, men i efterhand såg jag att funktionen gör alldeles för mycket.
+
+Det mest frustrerande var att försöka följa "gör en sak"-regeln. Vad räknas som "en sak"? Är att validera input och sedan bearbeta det en sak eller två saker? Jag insåg att gränsen ofta är suddigare än boken får det att låta.
+
+Något som förvånade mig var hur mycket lättare koden blev att testa när jag delade upp större funktioner. Mindre funktioner betydde att jag kunde testa specifika delar isolerat istället för att behöva sätta upp komplicerade testscenarier.
+
+Ett annan utmaning var att balansera läsbarhet mot Clean Code-reglerna. Ibland kändes det som att dela upp en funktion gjorde koden mer fragmenterad och svårare att följa, även om den tekniskt blev "renare".
 
 
 ## Refactoring
@@ -164,4 +181,14 @@ function validateTokenParts (parts, { header, payload, headerEncoded, payloadEnc
 }
 ```
 
-## Huvud reflections
+## Huvudreflektion
+
+Utvecklingen av JWT-modulen var ganska svårt. Clean Code-principerna från kapitel 2 och 3 har tvingat mig att tänka på kod som kommunikation mellan människor, inte bara instruktioner till datoren.
+
+Den största insikten har varit att kvalitet i kod inte bara handlar om att lösa problemet, utan om hur lösningen kommuniceras. Tidigare fokuserade jag främst på funktionalitet - att koden bara fungerade var tillräckligt. Nu förstår man att läsbarhet och underhållbarhet är lika viktiga, särskilt när koden ska användas av andra utvecklare/programmerare.
+
+Namngivning visade sig vara mycket mer komplext än jag förväntat mig. Det är lätt att underskatta hur mycket mental energi som krävs för att hitta namn som verkligen förklarar intentionen. Jag märkte att processen att hitta bra namn ofta hjälpte mig förstå vad koden faktiskt skulle göra, vilket ledde senare till bättre struktur.
+
+Funktionsdesign har varit den största utmaningen. Principen att hålla funktioner små och fokuserade är svår att uttvekla. Ett annan grej var att ofta låter funktioner växa organiskt under utveckling istället för att planera deras struktur från början.
+
+Arbetet med modulen har även lärt mig vikten av dokumentation och tydlig kommunikation. Att skriva för andra att använda, inte bara för mig själv, kräver ett helt annat förhållningssätt till kod.
