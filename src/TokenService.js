@@ -182,5 +182,5 @@ export function revokeToken (jti, reason) {
  * Rotates the signing key if needed.
  */
 export function rotateKey () {
-  signatureManager.rotateIfNeeded()
+  signatureManager.forceKeyRotation()
 }
