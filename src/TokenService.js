@@ -9,7 +9,7 @@
  */
 
 import { RevocationStore } from './RevocationStore.js'
-import { Base64Url } from './Base64Url.js'
+import { Base64Url } from './base64Url.js'
 import { Clock } from './Clock.js'
 import { JtiGenerator } from './generateJti.js'
 import { SignatureManager } from './SignatureManager.js'
@@ -183,4 +183,52 @@ export function revokeToken (jti, reason) {
  */
 export function rotateKey () {
   signatureManager.forceKeyRotation()
+}
+
+/**
+ * Refreshes a JWT token by verifying the old token and issuing a new one with a new TTL.
+ *
+ * @param {string} oldToken - The old JWT token to refresh.
+ * @param {number} newTtl - The new time-to-live for the refreshed token in seconds.
+ * @returns {object} An object containing the new token and the old token's expiry.
+ */
+export function refreshToken (oldToken, newTtl) {
+  const verification = verifyToken(oldToken)
+  validateTokenForRefresh(verification)
+
+  const userPayload = extractUserPayload(verification.payload)
+  const newToken = issueToken(userPayload, newTtl)
+
+  return {
+    token: newToken,
+    oldTokenExpiry: verification.payload.exp
+  }
+}
+
+/**
+ * Validates a token verification result for refresh eligibility.
+ *
+ * @param {object} verification - The verification result object.
+ * @throws {Error} If the token is invalid or expired.
+ */
+function validateTokenForRefresh (verification) {
+  if (!verification.valid) {
+    throw new Error('Invalid token')
+  }
+
+  const now = clock.getTimeInSeconds()
+  if (verification.payload.exp < now) {
+    throw new Error('Token expired')
+  }
+}
+
+/**
+ * Extracts the user payload from a JWT payload by removing standard JWT claims.
+ *
+ * @param {object} payload - The full JWT payload.
+ * @returns {object} The user-specific payload without iat, exp, and jti.
+ */
+export function extractUserPayload (payload) {
+  const { iat, exp, jti, ...userPayload } = payload
+  return userPayload
 }

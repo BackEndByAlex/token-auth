@@ -199,6 +199,23 @@ Manually triggers key rotation.
 rotateKey() // Forces generation of new signing key
 ```
 
+### `refreshToken(oldToken, newTtl)`
+Refreshes an existing valid token with a new expiration time.
+
+**Parameters:**
+- `oldToken` (String): The token to refresh
+- `newTtl` (Number): New time-to-live in seconds
+
+**Returns:** Object with properties:
+- `token` (String): The new token
+- `oldTokenExpiry` (Number): When the old token expires
+
+**Example:**
+```javascript
+const refreshed = refreshToken(oldToken, 7200)
+console.log('New token:', refreshed.token)
+```
+
 ## Token Structure
 
 Tokens follow JWT format with three base64url-encoded sections:

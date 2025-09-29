@@ -1,4 +1,4 @@
-import { issueToken, decodeToken, verifyToken, revokeToken, rotateKey } from '../src/TokenService.js'
+import { issueToken, decodeToken, verifyToken, revokeToken, rotateKey, refreshToken } from '../src/TokenService.js'
 
 console.log('='.repeat(50))
 
@@ -44,4 +44,21 @@ const postRevokeCheck = verifyToken(token)
 console.log(`Revocation result: ${revokeResult ? 'Success' : 'Failure'}`)
 console.log('Post-revocation token check:', postRevokeCheck)
 console.log(`Token revocation: ${!postRevokeCheck.valid ? 'PASS' : 'FAIL'}`)
+console.log('='.repeat(50))
+
+// Test 5: Refresh Token
+console.log('\nTest 5: Refresh Token')
+const originalToken = issueToken({ userId: 100 }, 3600)
+console.log('Original token created')
+
+const refreshed = refreshToken(originalToken, 7200)
+console.log('Token refreshed successfully')
+console.log('New token (first 50 chars):', refreshed.token.substring(0, 50) + '...')
+console.log('Old token will expire at:', refreshed.oldTokenExpiry)
+
+const newVerification = verifyToken(refreshed.token)
+console.log('New token verification:', newVerification)
+console.log('New token valid:', newVerification.valid ? 'YES' : 'NO')
+console.log('Result:', newVerification.valid ? 'PASS' : 'FAIL')
+
 console.log('='.repeat(50))
