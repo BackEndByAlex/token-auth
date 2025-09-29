@@ -1,7 +1,7 @@
 // test-app/complete-test.js
-import { Base64Url } from '../src/Base64Url.js'
-import { Clock } from '../src/Clock.js'
-import { SignatureManager } from '../src/SignatureManager.js'
+import { Base64Url } from '../src/base64Url.js'
+import { Clock } from '../src/clock.js'
+import { SignatureManager } from '../src/signatureManager.js'
 
 console.log('='.repeat(50))
 

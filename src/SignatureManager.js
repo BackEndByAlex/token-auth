@@ -72,7 +72,7 @@ export class SignatureManager {
    * @returns {boolean} True if the signature is valid, false otherwise.
    */
   verify (data, signature, kid) {
-    if (kid !== this.currentKeyId) {
+    if (!this.#isVerified(kid)) {
       return false
     }
 
@@ -81,9 +81,42 @@ export class SignatureManager {
   }
 
   /**
+   * Checks if the provided key ID matches the current key ID.
+   *
+   * @param {string} kid - The key ID to verify.
+   * @returns {boolean} True if the key ID matches the current key ID, false otherwise.
+   */
+  #isVerified (kid) {
+    if (kid !== this.currentKeyId) {
+      return false
+    }
+    return true
+  }
+
+  /**
    * Forces immediate key rotation by generating a new key.
    */
   forceKeyRotation () {
     this.#generateNewKey()
+  }
+
+  /**
+   * Determines if the current key should be rotated based on its age.
+   *
+   * @returns {boolean} True if the key should be rotated, false otherwise.
+   */
+  shouldRotate () {
+    return this.#getKeyAge() > 24 * 60 * 60 * 1000
+  }
+
+  /**
+   * Returns the age of the current key in milliseconds.
+   *
+   * @returns {number} The age of the current key in milliseconds, or 0 if not set.
+   */
+  #getKeyAge () {
+    if (!this.keyRotationTime) return 0
+
+    return Date.now() - this.keyRotationTime
   }
 }

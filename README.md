@@ -21,7 +21,7 @@ npm i token-auth-edu
 
 ### From GitHub
 ```bash
-git clone https://github.com/your-username/token-auth.git
+git clone https://github.com/BackEndByAlex/token-auth.git
 cd token-auth
 ```
 
@@ -199,6 +199,23 @@ Manually triggers key rotation.
 rotateKey() // Forces generation of new signing key
 ```
 
+### `refreshToken(oldToken, newTtl)`
+Refreshes an existing valid token with a new expiration time.
+
+**Parameters:**
+- `oldToken` (String): The token to refresh
+- `newTtl` (Number): New time-to-live in seconds
+
+**Returns:** Object with properties:
+- `token` (String): The new token
+- `oldTokenExpiry` (Number): When the old token expires
+
+**Example:**
+```javascript
+const refreshed = refreshToken(oldToken, 7200)
+console.log('New token:', refreshed.token)
+```
+
 ## Token Structure
 
 Tokens follow JWT format with three base64url-encoded sections:
@@ -235,7 +252,6 @@ header.payload.signature
 - Uses basic hash-based signatures instead of RSA/ECDSA
 - No key persistence across application restarts
 - In-memory revocation store (not persistent)
-- No token refresh mechanism
 - No rate limiting or brute force protection
 
 ### Best Practices When Using
@@ -295,5 +311,5 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Version History
 
-- **v1.0.0** - Initial release with basic token operations
+- **v1.0.2** - Initial release with basic token operations
 - Features: Token creation, verification, revocation, key rotation

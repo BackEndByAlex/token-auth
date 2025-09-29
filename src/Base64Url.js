@@ -29,14 +29,14 @@ export class Base64Url {
    */
   decode (input) {
     try {
-      // Validate input first
-      if (!input || typeof input !== 'string') {
+      if (!this.#isValidInput(input)) {
         throw new Error('Input must be a non-empty string')
       }
 
-      if (!/^[A-Za-z0-9_-]*$/.test(input)) {
+      if (!this.#isValidBase64Url(input)) {
         throw new Error('Invalid base64url characters')
       }
+
       const decode = input.replace(/-/g, '+').replace(/_/g, '/')
       const padding = decode.length % 4 === 0 ? '' : '='.repeat(4 - (decode.length % 4))
       return atob(decode + padding)
@@ -46,5 +46,25 @@ export class Base64Url {
       }
       throw new Error('Failed to decode Base64Url')
     }
+  }
+
+  /**
+   * Validates that the input is a non-empty string.
+   *
+   * @param {string} input - The input to validate.
+   * @returns {boolean} True if the input is invalid, false otherwise.
+   */
+  #isValidInput (input) {
+    return input && typeof input === 'string'
+  }
+
+  /**
+   * Validates that the input contains only valid base64url characters.
+   *
+   * @param {string} input - The input string to validate.
+   * @returns {boolean} True if the input contains invalid base64url characters, false otherwise.
+   */
+  #isValidBase64Url (input) {
+    return /^[A-Za-z0-9_-]*$/.test(input)
   }
 }
