@@ -14,3 +14,4 @@ The module is tested through an automated test application in test-app/app.js an
 | Token revocation (revokeToken)   | Revoked token and verified      |    PASS     |       |
 | Key rotation (rotateToken)       | Rotated key, old token invalid  |    PASS     | force rotate key it's working, 24h rotate key I did not test |
 | Invalid token handling           | Tested with malformed token     |    PASS     |
+| Token refresh (refreshToken) | Refreshed token with new expiry | PASS 
