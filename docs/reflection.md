@@ -15,9 +15,9 @@
 
 Kapitel 2 om namngivning har varit superbra den har visat mig hur mycket jag tidigare missade angående kodkvalitet. Insåg även att dåliga namn skapar förvirring.
 
-Under arbetet med modulen märktes, hur mycket tid som faktiskt går åt för att hitta bra namn. Först kändes det onödigt, men snabbt blev det tydligt att vaga eller missvisande namn försvårar återanvändning av kod.
+Under arbetet med modulen märktes, hur mycket tid som faktiskt går åt för att hitta bra namn. Först kändes det onödigt, men snabbt blev det tydligt att vaga namn försvårar återanvändning av kod.
 
-En stor utmaning var att vara konsekvent. Jag växlade automatiskt mellan "create", "generate" och "make" för samma koncept, vilket skapade onödig förvirring men när man skulle komma ihåg vilket ord jag använt det blev svårt.
+En stor utmaning var att vara konsekvent. Jag växlade automatiskt mellan "create", "generate" och "make" för samma koncept, vilket skapade onödig förvirring från min sida men när man skulle komma ihåg vilket ord jag använt det blev det svårt.
 
 Det mest överraskande var hur namngivning påverkade min egen förståelse av koden. När man tvingades hitta riktigt beskrivande namn fick jag tänka längre på vad funktionen faktiskt skulle göra. Ibland insåg man att funktionen gjorde för mycket, bara genom namngivningsprocessen, där jag upptänkte att förkorta funktionen bara på grund av namnet.
 

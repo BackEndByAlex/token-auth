@@ -1,7 +1,9 @@
 # Test Report
 
 ## Test Method
-The module is tested through an automated test application in test-app/app.js and functions.js that runs each function and verifies results.
+The module is tested through an automated test application in test-app/app.js and test-app/functions-test.js that runs each function and verifies results.
+
+Everything passes, the parts I test are those which are the most relevant for the system to work in my perspective.
 
 ## Test Results
 

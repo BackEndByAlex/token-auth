@@ -1,12 +1,16 @@
 # Token-Auth Module
 
-A lightweight, dependency-free JavaScript module for issuing, verifying, and revoking JWT-style authentication tokens. Designed for educational purposes and small-scale applications requiring basic token-based authentication with key rotation, expiration handling, and revocation capabilities.
+A lightweight, dependency-free JavaScript module for issuing, verifying, and revoking JWT-style authentication tokens. Designed for educational purposes and small-scale applications requiring basic token-based authentication with key rotation, expiration handling, evocation and refreshToken capabilities.
 
 ## Features
 
 - **Token Creation**: Generate signed tokens with custom payloads and expiration times
 - **Token Verification**: Validate token signatures and check revocation status
-- **Token Revocation**: Maintain a revocation list for invalidated tokens
+- **Token Revocation**: Maintain a revocation list for 
+
+- **Refresh Token**: Refreshes a token by verify the old one and request a new one.
+
+invalidated tokens
 - **Key Rotation**: Automatic key rotation with configurable intervals
 - **Base64URL Encoding**: RFC 4648 compliant encoding/decoding
 - **Zero Dependencies**: No external libraries required
@@ -312,4 +316,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## Version History
 
 - **v1.0.2** - Initial release with basic token operations
-- Features: Token creation, verification, revocation, key rotation
+- Features: Token creation, verification, revocation, key rotation, refreshToken.
