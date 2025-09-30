@@ -110,6 +110,15 @@ function signJwt (header, payload) {
 }
 ```
 
+- Koden efter andra refactoring
+
+``` javascript
+export function issueToken (payload, ttlSeconds) {
+  const jwtPayload = tokenBuilder.createJwtPayload(payload, ttlSeconds)
+  const jwtParts = tokenBuilder.createJwtParts(jwtPayload)
+  return signJwt(jwtParts)
+}
+```
 
 
 ### VerifyToken Function
@@ -180,6 +189,21 @@ function validateTokenParts (parts, { header, payload, headerEncoded, payloadEnc
   return { valid: isValid, payload }
 }
 ```
+
+- Koden efter andra refactoring
+
+``` javascript
+export function verifyToken (token) {
+  try {
+    const parts = tokenParser.parseTokenParts(token)
+    const decoded = tokenParser.decodeTokenParts(parts)
+    return tokenValidator.validateTokenParts(parts, decoded)
+  } catch (error) {
+    return { valid: false, error: 'Verification failed' }
+  }
+}
+```
+
 
 ## Huvudreflektion
 
