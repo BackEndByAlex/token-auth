@@ -46,19 +46,23 @@ console.log('Post-revocation token check:', postRevokeCheck)
 console.log(`Token revocation: ${!postRevokeCheck.valid ? 'PASS' : 'FAIL'}`)
 console.log('='.repeat(50))
 
-// Test 5: Refresh Token
-console.log('\nTest 5: Refresh Token')
-const originalToken = issueToken({ userId: 100 }, 3600)
-console.log('Original token created')
+// Test 5: Token Refresh
+console.log('\nTest 5: Token Refresh')
+const fakeToken = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEyM30.invalid-signature'
+try {
+  refreshToken(fakeToken, 3600)
+  console.log('Invalid token refresh: FAIL (should not work)')
+} catch (error) {
+  console.log('Invalid token refresh blocked:', error.message)
+  console.log('Invalid token refresh: PASS')
+}
 
-const refreshed = refreshToken(originalToken, 7200)
-console.log('Token refreshed successfully')
-console.log('New token (first 50 chars):', refreshed.token.substring(0, 50) + '...')
-console.log('Old token will expire at:', refreshed.oldTokenExpiry)
+console.log('='.repeat(50))
 
-const newVerification = verifyToken(refreshed.token)
-console.log('New token verification:', newVerification)
-console.log('New token valid:', newVerification.valid ? 'YES' : 'NO')
-console.log('Result:', newVerification.valid ? 'PASS' : 'FAIL')
+// Test 6: Revoked Token Refresh
+console.log('\nTest 6: Revoked Token Refresh')
+const tokenToRevoke = issueToken({ userId: 300 }, 3600)
+const decodedRevoke = decodeToken(tokenToRevoke)
+revokeToken(decodedRevoke.jti, 'Test revocation')
 
 console.log('='.repeat(50))

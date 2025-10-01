@@ -69,33 +69,8 @@ export class TokenValidator {
    * @throws {Error} If the token is invalid or expired.
    */
   validateTokenForRefresh (verification) {
-    if (this.#validateToken(verification)) {
+    if (!verification.valid && verification.error !== 'Token expired') {
       throw new Error('Invalid token')
     }
-
-    if (this.#isPayloadExpired(verification)) {
-      throw new Error('Token expired')
-    }
-  }
-
-  /**
-   * Checks if the verification result is valid.
-   *
-   * @param {object} verification - The verification result object.
-   * @returns {boolean} True if the token is invalid, false otherwise.
-   */
-  #validateToken (verification) {
-    return !verification.valid
-  }
-
-  /**
-   * Checks if the JWT payload is expired based on the current time.
-   *
-   * @param {object} verification - The verification result object containing the payload.
-   * @returns {boolean} True if the payload is expired, false otherwise.
-   */
-  #isPayloadExpired (verification) {
-    const now = this.clock.getTimeInSeconds()
-    return verification.payload.exp < now
   }
 }
