@@ -28,7 +28,7 @@ export class TokenValidator {
    * @returns {object} An object with 'valid' boolean and either 'payload' or 'error'.
    */
   validateTokenParts (parts, { header, payload, headerEncoded, payloadEncoded }) {
-    if (this.#expireToken(payload)) {
+    if (this.#isTokenExpired(payload)) {
       return { valid: false, error: 'Token expired' }
     }
 
@@ -58,7 +58,7 @@ export class TokenValidator {
    * @param {object} payload - The JWT payload object.
    * @returns {object|undefined} Returns an object with 'valid' and 'error' if expired, otherwise undefined.
    */
-  #expireToken (payload) {
+  #isTokenExpired (payload) {
     return payload.exp < this.clock.getTimeInSeconds()
   }
 

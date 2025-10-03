@@ -12,7 +12,7 @@ import { RevocationStore } from './revocationStore.js'
 import { Clock } from './clock.js'
 import { JtiGenerator } from './generateJti.js'
 import { SignatureManager } from './signatureManager.js'
-import { TokenBuilder } from './TokenParts/TokenBuilder.js'
+import { TokenBuilder } from './TokenParts/TokenParts.js'
 import { TokenParser } from './TokenParts/TokenParser.js'
 import { TokenValidator } from './TokenParts/TokenValidator.js'
 
@@ -110,15 +110,15 @@ export function rotateKey () {
  * @returns {object} An object containing the new token and the old token's expiry.
  */
 export function refreshToken (oldToken, newTtl) {
-  const verification = verifyToken(oldToken)
-  tokenValidator.validateTokenForRefresh(verification)
+  const verifiedToken = verifyToken(oldToken)
+  tokenValidator.validateTokenForRefresh(verifiedToken)
 
-  const userPayload = extractUserPayload(verification.payload)
+  const userPayload = extractUserPayload(verifiedToken.payload)
   const newToken = issueToken(userPayload, newTtl)
 
   return {
     token: newToken,
-    oldTokenExpiry: verification.payload.exp
+    oldTokenExpiry: verifiedToken.payload.exp
   }
 }
 
@@ -129,6 +129,7 @@ export function refreshToken (oldToken, newTtl) {
  * @returns {object} The user-specific payload without iat, exp, and jti.
  */
 function extractUserPayload (payload) {
+  // Remove JWT standard claims - they will be regenerated for the new token
   const { iat, exp, jti, ...userPayload } = payload
   return userPayload
 }
