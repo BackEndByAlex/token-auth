@@ -2,12 +2,14 @@
  * Represents a clock utility for retrieving the current time in seconds.
  */
 export class Clock {
+  static SECONDS_IN_MILLISECOND = 1000
+
   /**
-   * Returns the current time in seconds since the Unix epoch.
+   * Returns the current Unix timestamp in seconds.
    *
-   * @returns {number} The current time in seconds.
+   * @returns {number} Current timestamp in seconds.
    */
   getTimeInSeconds () {
-    return Math.floor(Date.now() / 1000)
+    return Math.floor(Date.now() / Clock.SECONDS_IN_MILLISECOND)
   }
 }
