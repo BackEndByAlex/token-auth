@@ -10,11 +10,11 @@
 
 import { RevocationStore } from './revocationStore.js'
 import { Clock } from './clock.js'
-import { JtiGenerator } from './generateJti.js'
+import { JtiGenerator } from './tokenIdGenerator.js'
 import { SignatureManager } from './signatureManager.js'
-import { TokenBuilder } from './TokenParts/TokenParts.js'
+import { TokenBuilder } from './TokenParts/tokenParts.js'
 import { TokenParser } from './TokenParts/TokenParser.js'
-import { TokenValidator } from './TokenParts/TokenValidator.js'
+import { TokenValidator } from './TokenParts/tokenValidator.js'
 
 const clock = new Clock()
 const jtiGenerator = new JtiGenerator()
