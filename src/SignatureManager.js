@@ -27,10 +27,10 @@ export class SignatureManager {
   }
 
   /**
-   * Createa a cryptographic signature for the given data.
+   * Creates a cryptographic signature for the given data.
    * 
-   * Note one thing: This is a simplified example and does not use real cryptographic methods.
-   * It's use for educational purposes only.
+   * Note: This is a simplified implementation for educational purposes only.
+   * Production code should use proper cryptographic libraries.
    *
    * @param {string} data - The data to sign.
    * @returns {string} The signature string.
@@ -50,7 +50,7 @@ export class SignatureManager {
    * @param {string} keyId - The key ID used for signing.
    * @returns {boolean} True if signature is valid, false otherwise.
    */
-  verify(data, signature, keyId) {
+  verify (data, signature, keyId) {
     if (!this.#isKeyIdValid(keyId)) {
       return false
     }
@@ -63,8 +63,7 @@ export class SignatureManager {
    * Rotates the signing key if it has expired.
    */
   rotateIfNeeded () {
-    const now = Date.now()
-    if (!this.keyRotationTime || now - this.keyRotationTime > ROTATION_INTERVAL_MS) { // Rotate every 24 hours
+    if (this.shouldRotate()) {
       this.#generateNewKey()
     }
   }
@@ -104,27 +103,19 @@ export class SignatureManager {
   }
 
   #truncateSignature (signature) {
-    return signature.substring(0, SIGNATURE_LENGTH)
+    return signature.substring(0, SignatureManager.SIGNATURE_LENGTH)
   }
 
   #generateNewKey () {
     this.currentKeyId = Date.now().toString()
     this.keyRotationTime = Date.now()
   }
-
-  /**
-   * Checks if the provided key ID matches the current key ID.
-   */
-  #isKeyIdValid  (keyId) {
+  
+  #isKeyIdValid (keyId) {
     return keyId === this.currentKeyId
   }
 
-  /**
-   * Returns the age of the current key in milliseconds.
-   */
   #getKeyAgeInMilliseconds () {
-    if (!this.keyRotationTime) return 0
-
-    return Date.now() - this.keyRotationTime
+    return !this.keyRotationTime ? 0 : Date.now() - this.keyRotationTime
   }
 }
