@@ -1,15 +1,9 @@
 import { Clock } from '../clock.js'
 
 /**
- * Class responsible for validating JWT tokens, including revocation and signature checks.
+ * Validates JWT tokens for expiration, revocation, and signature.
  */
 export class TokenValidator {
-  /**
-   * Creates an instance of TokenValidator.
-   *
-   * @param {object} revocationStore - The store used to check if a token has been revoked.
-   * @param {object} signatureManager - The manager used to verify token signatures.
-   */
   constructor (revocationStore, signatureManager) {
     this.revocationStore = revocationStore
     this.signatureManager = signatureManager
@@ -36,41 +30,42 @@ export class TokenValidator {
       return { valid: false, error: 'Token revoked' }
     }
 
-    const dataVerify = `${headerEncoded}.${payloadEncoded}`
-    const isValid = this.signatureManager.verify(dataVerify, parts[2], header.kid)
+     if (!this.#hasValidSignature(parts, header, headerEncoded, payloadEncoded)) {
+      return { valid: false, error: 'Invalid signature' }
+    }
 
-    return { valid: isValid, payload }
+    return { valid: true, payload }
   }
 
-  /**
-   * Checks if the token has been revoked based on the payload's 'jti' claim.
+    /**
+   * Validates that a token can be refreshed.
+   * 
+   * Allows refresh of expired tokens but not revoked or invalid tokens.
    *
-   * @param {object} payload - The JWT payload object.
-   * @returns {object|undefined} Returns an object with 'valid' and 'error' if revoked, otherwise undefined.
-   */
-  #ifTokenRevoked (payload) {
-    return this.revocationStore.checkIfRevoked(payload.jti)
-  }
-
-  /**
-   * Checks if the token is expired based on the payload's 'exp' claim.
-   *
-   * @param {object} payload - The JWT payload object.
-   * @returns {object|undefined} Returns an object with 'valid' and 'error' if expired, otherwise undefined.
-   */
-  #isTokenExpired (payload) {
-    return payload.exp < this.clock.getTimeInSeconds()
-  }
-
-  /**
-   * Validates a token verification result for refresh eligibility.
-   *
-   * @param {object} verification - The verification result object.
+   * @param {object} verification - Result from verifyToken().
    * @throws {Error} If the token is invalid or expired.
    */
   validateTokenForRefresh (verification) {
     if (!verification.valid && verification.error !== 'Token expired') {
-      throw new Error('Invalid token')
+      throw new Error(`Cannot refresh token: ${verification.error}`)
     }
+  }
+
+  // private methods
+
+  #isTokenExpired (payload) {
+    return payload.exp < this.clock.now()
+  }
+
+  #ifTokenRevoked (payload) {
+    return this.revocationStore.isRevoked(payload.jti)
+  }
+
+  #hasValidSignature (parts, header, headerEncoded, payloadEncoded) {
+    const signedData = `${headerEncoded}.${payloadEncoded}`
+    const signature = parts[2]
+    const kid = header.kid
+
+    return this.signatureManager.verify(signedData, signature, kid)
   }
 }

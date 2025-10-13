@@ -1,13 +1,11 @@
 import { Base64Url } from '../base64Url.js'
 
 /**
- * A class for parsing and decoding JWT tokens.
+ * Parses and decodes JWT tokens.
  */
 export class TokenParser {
-  /**
-   * Creates an instance of TokenParser.
-   *
-   */
+  static EXPECTED_PARTS_LENGTH = 3
+
   constructor () {
     this.base64Url = new Base64Url()
   }
@@ -30,28 +28,29 @@ export class TokenParser {
   }
 
   /**
-   * Checks if the parts array has exactly three elements.
-   *
-   * @param {string[]} parts - The array to check.
-   * @returns {boolean} True if the array has three elements, false otherwise.
-   */
-  #isLengthThree (parts) {
-    return parts.length === 3
-  }
-
-  /**
    * Decodes the header and payload parts of a JWT token.
    *
    * @param {string[]} parts - Array containing the encoded header, payload, and signature.
-   * @returns {object} An object with decoded header, payload, and their encoded forms.
+   * @returns {object} Decoded header, payload, and their encoded forms.
    */
   decodeTokenParts (parts) {
     const [headerEncoded, payloadEncoded] = parts
     return {
-      header: JSON.parse(this.base64Url.decode(headerEncoded)),
-      payload: JSON.parse(this.base64Url.decode(payloadEncoded)),
+      header: this.#decodeJson(headerEncoded),
+      payload: this.#decodeJson(payloadEncoded),
       headerEncoded,
       payloadEncoded
     }
+  }
+
+  // private methods
+
+  #isLengthThree (parts) {
+    return parts.length === TokenParser.EXPECTED_PARTS_LENGTH
+  }
+
+  #decodeJson (encoded) {
+    const jsonString = this.base64Url.decode(encoded)
+    return JSON.parse(jsonString)
   }
 }

@@ -1,31 +1,30 @@
 /**
- *
  * Service for creating and verifying JWT tokens.
- * (c) 2025, MIT license
- *
+ * 
+ * Educational purpose only. Not for production use.
+ * 
  * @author Alexandru C.A
- * @description TokenService is responsible for managing JWT tokens,
- * including creation, verification, and revocation.
+ * @license MIT
  */
 
 import { RevocationStore } from './revocationStore.js'
 import { Clock } from './clock.js'
-import { JtiGenerator } from './tokenIdGenerator.js'
+import { TokenIdGenerator  } from './tokenIdGenerator.js'
 import { SignatureManager } from './signatureManager.js'
-import { TokenBuilder } from './TokenParts/tokenParts.js'
-import { TokenParser } from './TokenParts/TokenParser.js'
+import { TokenBuilder } from './TokenParts/tokenBuilder.js'
+import { TokenParser } from './TokenParts/tokenParser.js'
 import { TokenValidator } from './TokenParts/tokenValidator.js'
 
 const clock = new Clock()
-const jtiGenerator = new JtiGenerator()
+const tokenIdGenerator = new TokenIdGenerator()
 const signatureManager = new SignatureManager()
-const revocation = new RevocationStore()
-const tokenBuilder = new TokenBuilder(clock, jtiGenerator, signatureManager)
+const revocationStore = new RevocationStore()
+const tokenBuilder = new TokenBuilder(clock, tokenIdGenerator, signatureManager)
 const tokenParser = new TokenParser()
-const tokenValidator = new TokenValidator(revocation, signatureManager)
+const tokenValidator = new TokenValidator(revocationStore, signatureManager)
 
 /**
- * Issues a JWT token with the given payload and time-to-live.
+ * Issues a new JWT token.
  *
  * @param {object} payload - The payload to include in the token.
  * @param {number} ttlSeconds - Time-to-live for the token in seconds.
@@ -34,24 +33,11 @@ const tokenValidator = new TokenValidator(revocation, signatureManager)
 export function issueToken (payload, ttlSeconds) {
   const jwtPayload = tokenBuilder.createJwtPayload(payload, ttlSeconds)
   const jwtParts = tokenBuilder.createJwtParts(jwtPayload)
-  return signJwt(jwtParts)
+  return signToken(jwtParts)
 }
 
 /**
- * Signs the JWT header and payload using the current signature key.
- *
- * @param {object} param0 - An object containing the encoded header and payload.
- * @param {string} param0.header - The base64url encoded JWT header.
- * @param {string} param0.payload - The base64url encoded JWT payload.
- * @returns {string} The signed JWT token.
- */
-function signJwt ({ header, payload }) {
-  const signature = signatureManager.sign(`${header}.${payload}`)
-  return `${header}.${payload}.${signature}`
-}
-
-/**
- * Verifies a JWT token, checking its signature and revocation status.
+ * Verifies a JWT token's validity.
  *
  * @param {string} token - The JWT token to verify.
  * @returns {object} An object with 'valid' boolean and either 'payload' or 'error'.
@@ -67,54 +53,48 @@ export function verifyToken (token) {
 }
 
 /**
- * Decodes a JWT token and returns its payload.
+ * Decodes a JWT token without verification.
  *
  * @param {string} token - The JWT token to decode.
  * @returns {object} The decoded payload.
  * @throws {Error} If the token format is invalid.
  */
 export function decodeToken (token) {
-  try {
     const parts = tokenParser.parseTokenParts(token)
     const decoded = tokenParser.decodeTokenParts(parts)
     return decoded.payload
-  } catch (error) {
-    throw new Error('Invalid token format')
-  }
 }
 
 /**
- * Revokes a token by its jti (JWT ID).
+ * Revokes a token by its identifier.
  *
- * @param {string} jti - The unique identifier of the token to revoke.
+ * @param {string} tokenId - The unique identifier of the token to revoke.
  * @param {string} reason - The reason for revocation.
- * @returns {boolean} True if the token was revoked.
  */
-export function revokeToken (jti, reason) {
-  revocation.revokeToken(jti, reason)
-  return true
+export function revokeToken (tokenId, reason) {
+  revocationStore.revokeToken(tokenId, reason)
 }
 
 /**
- * Rotates the signing key if needed.
+ * Forces rotation of the signing key.
  */
 export function rotateKey () {
   signatureManager.forceKeyRotation()
 }
 
 /**
- * Refreshes a JWT token by verifying the old token and issuing a new one with a new TTL.
+ * Refreshes an existing token with a new expiration time.
  *
- * @param {string} oldToken - The old JWT token to refresh.
- * @param {number} newTtl - The new time-to-live for the refreshed token in seconds.
- * @returns {object} An object containing the new token and the old token's expiry.
+ * @param {string} oldToken - The token to refresh.
+ * @param {number} newTimeToLive - New expiration time in seconds.
+ * @returns {object} Object with new token and old token's expiry.
  */
-export function refreshToken (oldToken, newTtl) {
+export function refreshToken (oldToken, newTimeToLive) {
   const verifiedToken = verifyToken(oldToken)
   tokenValidator.validateTokenForRefresh(verifiedToken)
 
   const userPayload = extractUserPayload(verifiedToken.payload)
-  const newToken = issueToken(userPayload, newTtl)
+  const newToken = issueToken(userPayload, newTimeToLive)
 
   return {
     token: newToken,
@@ -122,14 +102,14 @@ export function refreshToken (oldToken, newTtl) {
   }
 }
 
-/**
- * Extracts the user payload from a JWT payload by removing standard JWT claims.
- *
- * @param {object} payload - The full JWT payload.
- * @returns {object} The user-specific payload without iat, exp, and jti.
- */
+// helper function
+
+function signToken ({ header, payload }) {
+  const signature = signatureManager.sign(`${header}.${payload}`)
+  return `${header}.${payload}.${signature}`
+}
+
 function extractUserPayload (payload) {
-  // Remove JWT standard claims - they will be regenerated for the new token
   const { iat, exp, jti, ...userPayload } = payload
   return userPayload
 }

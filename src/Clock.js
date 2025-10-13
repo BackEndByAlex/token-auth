@@ -9,7 +9,7 @@ export class Clock {
    *
    * @returns {number} Current timestamp in seconds.
    */
-  getTimeInSeconds () {
+  now () {
     return Math.floor(Date.now() / Clock.SECONDS_IN_MILLISECOND)
   }
 }

@@ -3,7 +3,7 @@
  * 
  * Format: timestamp + random alphanumeric string
  */
-export class JtiGenerator {
+export class TokenIdGenerator {
   static RANDOM_STRING_LENGTH = 7
   static BASE36_RADIX = 36
   static RANDOM_PREFIX_LENGTH = 2 // to skip '0.'
@@ -16,7 +16,7 @@ export class JtiGenerator {
    *
    * @returns {string} The generated token identifier.
    */
-  generateJti () {
+  generate () {
     const timestamp = this.#getTimestamp()
     const randomPart = this.#generateRandomString()
     return timestamp + randomPart
@@ -30,10 +30,10 @@ export class JtiGenerator {
 
   #generateRandomString () {
     return Math.random()
-      .toString(JtiGenerator.BASE36_RADIX)
+      .toString(TokenIdGenerator.BASE36_RADIX)
       .substring(
-        JtiGenerator.RANDOM_PREFIX_LENGTH,
-        JtiGenerator.RANDOM_PREFIX_LENGTH + JtiGenerator.RANDOM_STRING_LENGTH
+        TokenIdGenerator.RANDOM_PREFIX_LENGTH,
+        TokenIdGenerator.RANDOM_PREFIX_LENGTH + TokenIdGenerator.RANDOM_STRING_LENGTH
       )
   }
 }
