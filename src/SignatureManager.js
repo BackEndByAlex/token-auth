@@ -94,6 +94,9 @@ export class SignatureManager {
     return data + secret
   }
 
+  /**
+   * Generates a simple hash-like signature from the input string.
+   */
   #generateSignature (input) {
     let hash = ''
     for (let i = 0; i < input.length; i += 3) {
@@ -102,6 +105,9 @@ export class SignatureManager {
     return hash
   }
 
+  /**
+   * Truncates the signature to a fixed length.
+   */
   #truncateSignature (signature) {
     return signature.substring(0, SignatureManager.SIGNATURE_LENGTH)
   }

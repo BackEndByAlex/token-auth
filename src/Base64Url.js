@@ -70,6 +70,9 @@ export class Base64Url {
       : base64 + '='.repeat(paddingLength)
   }
 
+  /**
+   * Calculates the number of padding characters needed for base64 encoding.
+   */
   #calculatePaddingLength (length) {
     const remainder = length % Base64Url.BASE64_PADDING_MODULO
     return remainder === 0 ? 0 : Base64Url.BASE64_PADDING_MODULO - remainder

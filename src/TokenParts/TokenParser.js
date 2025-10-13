@@ -49,6 +49,9 @@ export class TokenParser {
     return parts.length === TokenParser.EXPECTED_PARTS_LENGTH
   }
 
+  /**
+   * Decodes a base64url-encoded JSON string.
+   */
   #decodeJson (encoded) {
     const jsonString = this.base64Url.decode(encoded)
     return JSON.parse(jsonString)

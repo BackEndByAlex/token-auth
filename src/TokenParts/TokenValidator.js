@@ -57,10 +57,22 @@ export class TokenValidator {
     return payload.exp < this.clock.now()
   }
 
+  /**
+   * Checks if the token has been revoked.
+   */
   #ifTokenRevoked (payload) {
     return this.revocationStore.isRevoked(payload.jti)
   }
 
+  /**
+   * Verifies the token's signature using the signature manager.
+   * 
+   * @param {string[]} parts - The JWT token parts.
+   * @param {object} header - The decoded JWT header.
+   * @param {string} headerEncoded - The base64url encoded JWT header.
+   * @param {string} payloadEncoded - The base64url encoded JWT payload.
+   * @returns {boolean} True if the signature is valid, false otherwise.
+   */
   #hasValidSignature (parts, header, headerEncoded, payloadEncoded) {
     const signedData = `${headerEncoded}.${payloadEncoded}`
     const signature = parts[2]

@@ -104,11 +104,17 @@ export function refreshToken (oldToken, newTimeToLive) {
 
 // helper function
 
+/**
+ * Signs the JWT token parts to create the final token string.
+ */
 function signToken ({ header, payload }) {
   const signature = signatureManager.sign(`${header}.${payload}`)
   return `${header}.${payload}.${signature}`
 }
 
+/**
+ * Extracts user-defined payload from the full JWT payload.
+ */
 function extractUserPayload (payload) {
   const { iat, exp, jti, ...userPayload } = payload
   return userPayload
