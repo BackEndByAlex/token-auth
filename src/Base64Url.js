@@ -1,22 +1,29 @@
 /**
- * Utility class for encoding and decoding base64url strings.
+ * Encoder/decoder for base64url format.
+ * 
+ * Base64url is a URL-safe variant of base64 that:
+ * - Replaces '+' with '-'
+ * - Replaces '/' with '_'
+ * - Omits padding '=' characters
  */
 export class Base64Url {
+  static BASE64URL_REGEX = /^[A-Za-z0-9_-]*$/
+  static BASE64_PADDING_MODULO = 4
+
+
   /**
-   * The function encodes the input string to base64 using btoa.
-   * It then replaces '+' with '-', '/' with '_', and removes any trailing '=' characters to convert from base64 to base64url.
-   * Finally, it returns the modified string.
+   * Encodes a string to base64url format.
    *
-   * @param {string} input - The input string to encode.
+   * @param {string} input - The string to encode.
    * @returns {string} The base64url-encoded string.
+   * @throws {Error} If encoding fails (e.g., invalid Unicode characters).
    */
   encode (input) {
     try {
       const base64 = btoa(input)
-      const base64Url = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-      return base64Url
+      return this.#convertBase64ToBase64Url(base64)
     } catch (error) {
-      throw new Error('Failed to encode to Base64Url')
+      throw new Error(`Failed to encode to base64url: ${error.message}`)
     }
   }
 
@@ -28,43 +35,56 @@ export class Base64Url {
    * @throws {Error} If the input is invalid or decoding fails.
    */
   decode (input) {
+    this.#validateInput(input)
+    this.#validateBase64UrlCharacters(input)
+
     try {
-      if (!this.#isValidInput(input)) {
-        throw new Error('Input must be a non-empty string')
-      }
-
-      if (!this.#isValidBase64Url(input)) {
-        throw new Error('Invalid base64url characters')
-      }
-
-      const decode = input.replace(/-/g, '+').replace(/_/g, '/')
-      const padding = decode.length % 4 === 0 ? '' : '='.repeat(4 - (decode.length % 4))
-      return atob(decode + padding)
+      const base64 = this.#convertBase64UrlToBase64(input)
+      return atob(base64)
     } catch (error) {
-      if (error.message.includes('base64url') || error.message.includes('Input must')) {
-        throw error
-      }
-      throw new Error('Failed to decode Base64Url')
+      throw new Error(`Failed to decode base64url: ${error.message}`)
     }
   }
 
-  /**
-   * Validates that the input is a non-empty string.
-   *
-   * @param {string} input - The input to validate.
-   * @returns {boolean} True if the input is invalid, false otherwise.
-   */
-  #isValidInput (input) {
-    return input && typeof input === 'string'
+  // private methods
+
+  #convertBase64ToBase64Url (base64) {
+    return base64
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '')
   }
 
-  /**
-   * Validates that the input contains only valid base64url characters.
-   *
-   * @param {string} input - The input string to validate.
-   * @returns {boolean} True if the input contains invalid base64url characters, false otherwise.
-   */
-  #isValidBase64Url (input) {
-    return /^[A-Za-z0-9_-]*$/.test(input)
+  #convertBase64UrlToBase64 (base64Url) {
+    const base64 = base64Url
+      .replace(/-/g, '+')
+      .replace(/_/g, '/')
+    
+    return this.#addPadding(base64)
+  }
+
+  #addPadding (base64) {
+    const paddingLength = this.#calculatePaddingLength(base64.length)
+    return paddingLength === 0
+      ? base64
+      : base64 + '='.repeat(paddingLength)
+  }
+
+  #calculatePaddingLength (length) {
+    const remainder = length % Base64Url.BASE64_PADDING_MODULO
+    return remainder === 0 ? 0 : Base64Url.BASE64_PADDING_MODULO - remainder
+  }
+
+  #validateInput (input) {
+    if (!input || typeof input !== 'string') {
+      throw new Error('Input must be a non-empty string')
+    }
+  }
+
+  #validateBase64UrlCharacters (input) {
+    if (!Base64Url.BASE64URL_REGEX.test(input)) {
+      throw new Error('Input contains invalid base64url characters')
+    }
   }
 }
+
