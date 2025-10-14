@@ -110,6 +110,8 @@ Kapitel 4 var lite knäpigt. En princip jag implementerade "Explain Yourself in 
 
 Vidare "Comments Do Not Make Up for Bad Code" tog jag bort en helt del JSDoc från privata metoder där metodnamnet redan är självförklarande. Till exempel behöver inte #isValidBase64Url(input) en kommentar som säger "validates base64url characters" - namnet säger redan detta. Jag behöll dock viktiga "Warning of Consequences" som varnar för att RevocationStore är in-memory och data förloras vid restart.
 
+### Exempel från kod:
+
 - FÖRE:
 ```javascript
 
@@ -150,7 +152,77 @@ export class RevocationStore {}
 
 ## kapitel 5 
 
+Under tiden jag läste insåg jag att "konsistent formatering" är viktigt. Anlednigen är att koden ska se professionell ut enligt "The Purpose of Formatting". Jag hade blandat spacing, ibland constructor () med mellanslag och ibland constructor() och andra methoder. Detta var en lint problem. Varför säger jag det linten ville ha "contructor()" men jag ville "constructor ()", vilket bröt mot "Team Rules". Då fick jag tabort linten och köra på min struktur alltså andra alternativen. 
+
+Vidare fick jag använda "Horizontal Formatting" genom hela projektet med korrekt "Indentation" och "Horizontal Openness and Density". Jag gjorde också "Vertical Formatting" genom att organisera metoder enligt "The Newspaper Metaphor" där publika metoder kommer först, alltså de viktiga sedan följt av privata implementation details. Vilket följer "Vertical Ordering". Ett annant fel var filnamnen. De var också inkonsistenta. Några med PascalCase (TokenService.js) och andra med camelCase (base64Url.js). Nu använder alla filer camelCase enligt "Team Rules".
+
+### Exempel från kod:
+
+- FÖRE bryter mot "Team Rules":
+```javascript
+
+constructor() {  } // Inkonsekvent ingen spacing
+TokenService.js // PascalCase filnamn
+encode(input) {  } // Ingen consistency
+
+```
+
+- EFTER:
+```javascript
+
+constructor () { } // Konsekvent spacing
+tokenService.js // camelCase överallt
+encode (input) { }
+
+```
+
+- "Vertical Ordering" enligt "The Newspaper Metaphor":
+```javascript
+
+class TokenValidator {
+  validateTokenParts() { ... }  // Publika metoder först
+  
+  #isExpired() { ... }          // Privata hjälp methoder sen
+  #isRevoked() { ... }
+  #hasValidSignature() { ... }
+}
+
+```
+
 ## kapitel 6 
+
+I kapitel 6  pratade de mycket om skillnaden mellan objects (döljer data, exponerar behavior) och data structures (exponerar data) genom "Data/Object Anti-Symmetry". Genom att skapa "Data Abstraction". Utifrån det gjorde, jag mina klasser som Base64Url exempelvis till riktiga objects med privata metoder för implementation och publika för "behavior". Som vidare döljer hur base64url-konvertering faktiskt fungerar. Detta följer "Hiding Structure" där användaren inte behöver veta om implementation details. 
+
+- FÖRE:
+
+```javascript
+
+encode (input) {
+    try {
+      const base64 = btoa(input)
+      const base64Url = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+      return base64Url
+    } catch (error) {
+      throw new Error('Failed to encode to Base64Url')
+    }
+  }
+
+```
+
+- EFTER "Data Abstraction" och "Hiding Structure":
+
+```javascript
+
+encode (input) {
+    try {
+      const base64 = btoa(input)
+      return this.#convertBase64ToBase64Url(base64)
+    } catch (error) {
+      throw new Error(`Failed to encode to base64url: ${error.message}`)
+    }
+  }
+
+```
 
 ## kapitel 7 
 
