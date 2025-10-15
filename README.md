@@ -315,5 +315,5 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Version History
 
-- **v1.0.3** - Initial release with basic token operations
+- **v1.0.4** - Initial release with basic token operations
 - Features: Token creation, verification, revocation, key rotation, refreshToken.
