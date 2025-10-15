@@ -4,8 +4,8 @@ import { Base64Url } from '../base64Url.js'
  * Builds JWT tokens by creating headers and payloads.
  */
 export class TokenBuilder {
-  static JWT_ALGORITHM = 'RS256'
-  static JWT_TYPE = 'JWT'
+  static #JWT_ALGORITHM = 'RS256'
+  static #JWT_TYPE = 'JWT'
 
   constructor (clock, tokenIdGenerator, signatureManager) {
     this.clock = clock
@@ -41,8 +41,8 @@ export class TokenBuilder {
     this.signatureManager.rotateIfNeeded()
 
     const header = {
-      alg: TokenBuilder.JWT_ALGORITHM,
-      typ: TokenBuilder.JWT_TYPE,
+      alg: TokenBuilder.#JWT_ALGORITHM,
+      typ: TokenBuilder.#JWT_TYPE,
       kid: this.signatureManager.getCurrentKeyId()
     }
 

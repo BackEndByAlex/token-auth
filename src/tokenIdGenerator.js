@@ -4,9 +4,9 @@
  * Format: timestamp + random alphanumeric string
  */
 export class TokenIdGenerator {
-  static RANDOM_STRING_LENGTH = 7
-  static BASE36_RADIX = 36
-  static RANDOM_PREFIX_LENGTH = 2 // to skip '0.'
+  static #RANDOM_STRING_LENGTH = 7
+  static #BASE36_RADIX = 36
+  static #RANDOM_PREFIX_LENGTH = 2 // to skip '0.'
 
 
   /**
@@ -30,10 +30,10 @@ export class TokenIdGenerator {
 
   #generateRandomString () {
     return Math.random()
-      .toString(TokenIdGenerator.BASE36_RADIX)
+      .toString(TokenIdGenerator.#BASE36_RADIX)
       .substring(
-        TokenIdGenerator.RANDOM_PREFIX_LENGTH,
-        TokenIdGenerator.RANDOM_PREFIX_LENGTH + TokenIdGenerator.RANDOM_STRING_LENGTH
+        TokenIdGenerator.#RANDOM_PREFIX_LENGTH,
+        TokenIdGenerator.#RANDOM_PREFIX_LENGTH + TokenIdGenerator.#RANDOM_STRING_LENGTH
       )
   }
 }

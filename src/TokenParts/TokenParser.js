@@ -4,7 +4,7 @@ import { Base64Url } from '../base64Url.js'
  * Parses and decodes JWT tokens.
  */
 export class TokenParser {
-  static EXPECTED_PARTS_LENGTH = 3
+  static #EXPECTED_PARTS_LENGTH = 3
 
   constructor () {
     this.base64Url = new Base64Url()
@@ -46,7 +46,7 @@ export class TokenParser {
   // private methods
 
   #isLengthThree (parts) {
-    return parts.length === TokenParser.EXPECTED_PARTS_LENGTH
+    return parts.length === TokenParser.#EXPECTED_PARTS_LENGTH
   }
 
   /**

@@ -2,8 +2,8 @@
  * Manages cryptographic keys, handles key rotation, signing, and verification.
  */
 export class SignatureManager {
-  static ROTATION_INTERVAL_MS = 24 * 60 * 60 * 1000 // 24 hours
-  static SIGNATURE_LENGTH = 16 // Length of the truncated signature
+  static #ROTATION_INTERVAL_MS = 24 * 60 * 60 * 1000 // 24 hours
+  static #SIGNATURE_LENGTH = 16 // Length of the truncated signature
 
   /**
    * Initializes a new instance of the SignatureManager class.
@@ -81,7 +81,7 @@ export class SignatureManager {
    * @returns {boolean} True if the key should be rotated, false otherwise.
    */
   shouldRotate () {
-    return this.#getKeyAgeInMilliseconds() > SignatureManager.ROTATION_INTERVAL_MS
+    return this.#getKeyAgeInMilliseconds() > SignatureManager.#ROTATION_INTERVAL_MS
   }
 
   // Private methods
@@ -109,7 +109,7 @@ export class SignatureManager {
    * Truncates the signature to a fixed length.
    */
   #truncateSignature (signature) {
-    return signature.substring(0, SignatureManager.SIGNATURE_LENGTH)
+    return signature.substring(0, SignatureManager.#SIGNATURE_LENGTH)
   }
 
   #generateNewKey () {
