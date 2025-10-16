@@ -1,8 +1,8 @@
 {
   "name": "token-auth-edu",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Educational JWT-style token authentication module",
-  "main": "src/TokenService.js",
+  "main": "src/tokenService.js",
   "type": "module",
   "scripts": {
     "test": "node test-app/app-test.js",
