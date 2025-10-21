@@ -2,7 +2,7 @@
 
 ## kapitel 2 Meaninful Names
 
-Jag har repeterat kapitel 2 om namngivning och i efterhand har jag upptäckt vissa klasser, metoder och tal som skulle kunna förbättras. Jag har nu använt principen "Use Intention-Revealing Names" genom att byta JtiGenerator till **TokenIdGenerator** och checkIfRevoked() till **isRevoked()**. Jag tyckte tidigare att det skulle göra koden mer avancerad bara genom att ha så långa namn på en metod, men nu i efterhand inser jag att koden blir mer läsbar. Därefter har jag tillämpat "Avoid Encodings" genom att förkorta getTimeInSeconds() till **now()**. Detta var ett fall där mitt långa namn gjorde det tydligt, men jag tänkte: varför inte "now"? Man skriver **clock.now()** vilket förklarar sig självt. Gällande "Magic Numbers" har jag lärt mig att använda static och skapa konstanter för att förklara vad dessa nummer gör istället. I linje med "Use Meaningful Names" blev talet 16 till SIGNATURE_LENGTH och **24 * 60 * 60 * 1000** blev ROTATION_INTERVAL_MS.
+Jag har repeterat kapitel 2 om namngivning och i efterhand har jag upptäckt vissa klasser, metoder och tal som skulle kunna förbättras. Jag har nu använt principen "Use Intention-Revealing Names" genom att byta JtiGenerator till **TokenIdGenerator** och checkIfRevoked() till **isRevoked()**. Jag tyckte tidigare att det skulle göra koden mer avancerad bara genom att ha så långa namn på en metod, men nu i efterhand inser jag att koden blir mer läsbar. Därefter har jag tillämpat "Avoid Encodings" genom att förkorta getTimeInSeconds() till **now()**. Detta var ett fall där mitt långa namn gjorde det tydligt, men jag tänkte: varför inte "now"? Man skriver **clock.now()** vilket förklarar sig självt. Gällande "Magic Numbers" har jag lärt mig att använda static och skapa konstanter för att förklara vad dessa nummer gör istället. I samband med "Use Meaningful Names" blev talet 16 till SIGNATURE_LENGTH och **24 * 60 * 60 * 1000** blev ROTATION_INTERVAL_MS.
 
 ### Exempel från kod:
 
@@ -191,7 +191,7 @@ class TokenValidator {
 
 ## kapitel 6 Objects and Data Structures
 
-I kapitel 6  pratade de mycket om skillnaden mellan objects (döljer data, exponerar behavior) och data structures (exponerar data) genom "Data/Object Anti-Symmetry". Genom att skapa **"Data Abstraction"**. Utifrån det gjorde, jag mina klasser som Base64Url exempelvis till **riktiga objects** med privata metoder för implementation och publika för "behavior". Som vidare döljer hur **base64url-konvertering faktiskt fungerar**. Detta följer "Hiding Structure" där användaren inte behöver veta om **implementation details**. 
+I kapitel 6  pratade de mycket om skillnaden mellan objects (döljer data, exponerar behavior) och data structures (exponerar data) genom "Data/Object Anti-Symmetry". Genom att skapa **"Data Abstraction"**. Utifrån det, gjorde jag mina klasser som Base64Url exempelvis till **riktiga objects** med privata metoder för implementation och publika för "behavior". Som döljer hur **base64url-konvertering faktiskt fungerar**. Detta följer "Hiding Structure" där användaren inte behöver veta om **implementation details**. 
 
 ### Exempel från kod:
 
@@ -228,7 +228,7 @@ encode (input) {
 
 ## kapitel 7 Error Handling
 
-Kapitel 7 vissade mig att mina error handling var för för enkla och gav inte **tillräckligt med information**. Utifrån den tanke har jag gjorde vissa förrendrigar utifrån "Provide Context with Exceptions" började jag inkludera ursprungsfelmeddelandet i mina errors. Alltså istället för bara "Failed to encode to Base64Url" skriver jag nu "Failed to encode base64url: ${error.message}". 
+Kapitel 7 vissade mig att mina error handling var, för enkla och gav inte **tillräckligt med information**. Utifrån den tanke har jag gjorde vissa förrendrigar utifrån "Provide Context with Exceptions" började jag inkludera ursprungsfelmeddelandet i mina errors. Alltså istället för bara "Failed to encode to Base64Url" skriver jag nu "Failed to encode base64url: ${error.message}". 
 
 Jag övervägde med att skapa custom error classes för att följa "Define Exception Classes in Terms of a Caller's Needs", men insåg att ingen av min kod **faktiskt behöver olika exception-typer för hantering**. Istället valde jag tydliga felmeddelanden med standard Error-klassen enligt "Use Exceptions Rather Than Return Codes", vilket är enklare och tillräckligt för detta projekt från min pespektiv.
 
@@ -267,7 +267,7 @@ encode (input) {
 
 ## kapitel 8 Boundaries
 
-Utifrån kapitel 8 "Boundaries" hanterade jag **boundaries** mot external dependencies, även built-in APIs som mitt projekt använder för att fungera. Genom att tillämpa "Using Third-Party Code" wrappade jag Date.now() i min Clock klass och btoa/atob i Base64Url. Utifrån booken skapar det "Clean Boundaries" mellan min kod och externa APIs. Även om jag försökte undvika built-in APIs för att inte försvåra för mig och koden. Min beslut blev att jag använda btoa och atob för att kunna** skapa kryptografin**. Jag behövde läsa på dessa APIs men det underlättade **enormt** i implementationen. Detta följer "Exploring and Learning Boundaries" där jag lärde mig hur **base64-encoding fungerar** samtidigt som jag isolerade beroendet i en egen klass.
+Utifrån kapitel 8 "Boundaries" hanterade jag **boundaries** mot external dependencies, även built-in APIs som mitt projekt använder för att fungera. Genom att tillämpa "Using Third-Party Code" wrappade jag Date.now() i min Clock klass och btoa/atob i Base64Url. Utifrån booken skapar det "Clean Boundaries" mellan min kod och externa APIs. Även om jag försökte undvika built-in APIs för att inte försvåra för mig och koden. Min beslut blev att jag använda btoa och atob för att kunna **skapa kryptografin**. Jag behövde läsa på dessa APIs men det underlättade **enormt** i implementationen. Detta följer "Exploring and Learning Boundaries" där jag lärde mig hur **base64-encoding fungerar** samtidigt som jag isolerade beroendet i en egen klass.
 
 ### Exempel från kod:
 
@@ -309,7 +309,7 @@ createJwtPayload (payload, timeToLiveSeconds) {
 
 ## kapitel 9 Uni Tests
 
-Jag skrev inte testerna först enligt "The Three of TDD", så jag behövde designa koden för att vara testbar enligt "Keeping Tests Clean". Genom att fokusera på "F.I.R.S.T" principles (Fast, Independent, Repeatable, Self-Validating, Timely) refaktorerade jag metoder som rotateIfNeeded() för att vara testbar. Den använder nu shouldRotate() som kan testas utan side effects. Jag designade för "Single Concept per Test" genom att **bryta ner stora metoder i små**, testbara units där varje metod testar ett koncept. Jag **strulade** med detta koncept på vissa ställen där jag inte kunde bryta ner metoderna så mycket, men på andra ställen fungerade det väl. 
+Jag skrev inte testerna först enligt "The Three of TDD". Anledningen är att jag behövde designa koden för att vara testbar enligt "Keeping Tests Clean". Genom att fokusera på "F.I.R.S.T" principles (Fast, Independent, Repeatable, Self-Validating, Timely) refaktorerade jag metoder som rotateIfNeeded() för att vara testbar. Den använder nu shouldRotate() som kan testas utan side effects. Jag designade även med ett koncept i bakhuvudet "Single Concept per Test" genom att **bryta ner stora metoder i små**, testbara units där varje metod testar ett koncept. Jag **strulade** med detta koncept på vissa ställen där jag inte kunde bryta ner metoderna så mycket, men på andra ställen fungerade det väl. 
 
 Jag skapade också två testfiler med visuella checkmarks och pass/fail counters vilket följer "Clean Tests". Mitt mål med testerna var att göra dem enkla att läsa och förstå när man kör dem för att se vad som fungerar. Vidare ville jag även skapa två olika stora **testfall**. Där en av dem testar mina functions som användare använder och mitt andra testfall testar mina publika moduler som är grundpelarna i systemet.
 
@@ -356,11 +356,11 @@ test('Newly rotated key should not need rotation', shouldRotate === false)
 
 ## kapitel 10 Classes
 
-Detta kapitlet var utifrån mig det mest påverkande i min kod. Först insåg jag att "Classes Should Be Small" inte bara handlar om **radantal** utan om "Single Responsibility Principle". Från vad jag förstod ska varje klass ha ett enda syfte. 
+Detta kapitlet var utifrån mig det näst mest påverkande i min kod. Först insåg jag att "Classes Should Be Small" inte bara handlar om **radantal** utan om "Single Responsibility Principle". Från vad jag förstod ska varje klass ha ett enda syfte. 
 
 Mina klasser som Clock (1 metod) och TokenIdGenerator (1 metod) följer detta väl och har hög "Cohesion" där alla delar arbetar mot samma mål. Men inte alla mina klasser är så, ett bra exempel är min **SignatureManager**. Utifrån boken skulle den delas upp, eftersom den hanterar både key management och signing/verification, vilket verkar bryta mot det tidigare sagda "Single Responsibility Principle". Men genom att applicera principen "Organizing for Change" insåg jag att **key rotation och signing** är så tätt sammankopplade att de hör ihop, alltså de arbetar mot samma mål. 
 
-Jag strulade lite med detta, eftersom boken säger att klasser ska vara små, men jag tänkte att om jag delar upp den så förlorar jag "Cohesion" mellan metoderna. 
+Jag strulade lite med detta, eftersom boken säger att klasser ska vara små, men jag tänkte att, om jag delar upp den så förlorar jag "Cohesion" mellan metoderna. 
 
 Att dela upp dem hade gjort koden mer komplex utan att ge verkligt **värde** från mitt perspektiv. Men detta visar att SRP inte betyder "minsta möjliga klass" utan "one reason to change".
 
